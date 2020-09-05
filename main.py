@@ -3,9 +3,18 @@
 # pip3 install scapy
 # run as root [sudo python3 main.py]
 import scapy.all as scapy
+import optparse
 
 # def scan(client_ip):
 # 	scapy.arping(client_ip)
+
+def get_args():
+	parser = optparse.OptionParser()
+	parser.add_option("-t", "--target", dest="target", help="Target <ip_address>/<range>")
+	(options, arguments) = parser.parse_args()
+	if not options.target:
+		parser.error("[ERROR] Please define target using -t or --target.\nUse --help for more info.\n")
+	return options
 
 def scan(client_ip):
 	client_mac = "ff:ff:ff:ff:ff:ff"
@@ -29,15 +38,33 @@ def scan(client_ip):
 	# index 0 is for answered list, while index 1 is for unanswered list
 	answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
 
-	# \t is a tab in string
-	print("---------------------------------------------------")
-	print("| IP\t\t\t| MAC Address")
-	print("---------------------------------------------------")
+	client_list = []
 	if len(answered_list) == 0:
 		print("  No Result")
 	else:
 		for elem in answered_list:
-			print("| " + elem[1].psrc + "\t\t| " + elem[1].hwsrc)
+			client_dict = {"ip": elem[1].psrc, "mac": elem[1].hwsrc}
+			client_list.append(client_dict)
+	return client_list
+
+def print_result(result_list):
+	# \t is a tab in string
+	print("---------------------------------------------------")
+	print("| IP\t\t\t| MAC Address")
+	print("---------------------------------------------------")
+	for client in result_list:
+		print("| "+ client["ip"] +"\t\t| " + client["mac"])
 	print("---------------------------------------------------\n")
 
-scan("192.168.0.1/24")
+options = get_args()
+scan_result = scan(options.target)
+print_result(scan_result)
+
+
+
+
+
+
+
+
+
