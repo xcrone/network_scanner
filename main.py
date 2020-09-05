@@ -3,15 +3,15 @@
 # pip3 install scapy
 # run as root [sudo python3 main.py]
 import scapy.all as scapy
-import optparse
+import argparse
 
 # def scan(client_ip):
 # 	scapy.arping(client_ip)
 
 def get_args():
-	parser = optparse.OptionParser()
-	parser.add_option("-t", "--target", dest="target", help="Target <ip_address>/<range>")
-	(options, arguments) = parser.parse_args()
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-t", "--target", dest="target", help="Target <ip_address>/<range>")
+	options = parser.parse_args()
 	if not options.target:
 		parser.error("[ERROR] Please define target using -t or --target.\nUse --help for more info.\n")
 	return options
