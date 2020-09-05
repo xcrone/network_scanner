@@ -1,0 +1,5 @@
+# on kali linux 2020
+# replace <ip_address> with main ip address (192.168.0.1)
+# -r is for range
+
+netdiscover -r <ip_address>/24
