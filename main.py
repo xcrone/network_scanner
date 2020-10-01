@@ -4,9 +4,7 @@
 # run as root [sudo python3 main.py]
 import scapy.all as scapy
 import argparse
-
-# def scan(client_ip):
-# 	scapy.arping(client_ip)
+import socket 
 
 def get_args():
 	parser = argparse.ArgumentParser()
@@ -47,14 +45,22 @@ def scan(client_ip):
 			client_list.append(client_dict)
 	return client_list
 
+def get_Host_name_IP(ip): 
+	try:
+		host_ip = socket.gethostbyaddr(ip)[0]
+	except: 
+		host_ip = "None"
+
+	return host_ip
+  
 def print_result(result_list):
 	# \t is a tab in string
-	print("---------------------------------------------------")
-	print("| IP\t\t\t| MAC Address")
-	print("---------------------------------------------------")
+	print("-----------------------------------------------------------------------------------")
+	print("| IP\t\t\t| MAC Address\t\t\t| HostName")
+	print("-----------------------------------------------------------------------------------")
 	for client in result_list:
-		print("| "+ client["ip"] +"\t\t| " + client["mac"])
-	print("---------------------------------------------------\n")
+		print("| " + client["ip"] + "\t\t| " + client["mac"] + "\t\t| " + get_Host_name_IP(client["ip"]))
+	print("-----------------------------------------------------------------------------------\n")
 
 options = get_args()
 scan_result = scan(options.target)
